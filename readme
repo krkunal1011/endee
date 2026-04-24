@@ -1,0 +1,31 @@
+# VibeCheck: AI-Powered Semantic Movie Recommender
+
+VibeCheck is an intelligent movie recommendation engine that utilizes a Retrieval-Augmented Generation (RAG) pipeline to suggest films based on abstract feelings, aesthetics, and user vibes. 
+
+Built as a bridge between traditional full-stack development and modern AI engineering, this project moves beyond rigid keyword searches. It converts natural language into high-dimensional vector embeddings to perform true semantic search, ultimately generating personalized, spoiler-free recommendations using Google's Gemini 1.5 Flash model.
+
+## Architecture and Engineering Focus
+
+A core focus of this project was building resilient infrastructure and seamless API integrations. The application features graceful degradation: if the local C++ vector database container drops connection or times out, the application catches the socket errors, bypasses the crash, and executes fallback logic to ensure the user still receives a seamless AI-generated response.
+
+## Tech Stack
+
+- Language: Python
+- LLM Integration: Google Gemini 1.5 Flash (via google-genai SDK)
+- Embeddings: HuggingFace sentence-transformers (all-MiniLM-L6-v2)
+- Vector Database: Local C++ Endee Vector Database (Dockerized)
+- Data Processing: Pandas, HTTP Requests
+
+## Key Features
+
+- Semantic Vector Search: Transforms abstract user inputs into 384-dimensional vectors to find the exact thematic match in the database.
+- Automated Data Ingestion: Safely parses local CSV datasets, generates embeddings on the fly, creates target collections, and populates the vector database.
+- Context-Aware AI Generation: Feeds the retrieved movie metadata directly into the Gemini LLM as context, prompting the model to explain why it fits the user mood without spoiling the ending.
+- Bulletproof Error Handling: Implements robust try/except safety nets across all external HTTP calls and database connections to prevent hard crashes.
+
+## Local Setup and Installation
+
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd endee

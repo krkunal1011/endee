@@ -22,18 +22,10 @@ def ingest_data(csv_path="movies.csv"):
         print("Error: movies.csv not found! Put it in the same folder.")
         return
 
-    # FIX: Create the 'movies' collection first with 384 dimensions
-    print("Creating 'movies' collection in database...")
-    try:
-        requests.post(f"{ENDEE_API_URL}/collections/movies", json={"dimension": 384})
-    except Exception as e:
-        print("Collection might already exist or DB is unreachable:", e)
-
     for index, row in df.iterrows():
         title = str(row.get('title', 'Unknown'))
         plot = str(row.get('plot', 'Unknown'))
         genre = str(row.get('genre', 'Unknown'))
-        
         text_to_embed = f"Title: {title}. Genre: {genre}. Plot: {plot}"
         embedding = encoder.encode(text_to_embed).tolist()
 
@@ -44,8 +36,7 @@ def ingest_data(csv_path="movies.csv"):
         }
 
         try:
-            # 🔥 FIX: Use the exact URL from the C++ test file
-            requests.post(f"{ENDEE_API_URL}/collections/movies/insert", json=payload)
+            requests.post(f"{ENDEE_API_URL}/insert", json=payload)
         except Exception as e:
             print(f"Failed to insert {title}: {e}")
 
@@ -57,8 +48,7 @@ def vibe_check_search(user_vibe):
 
     try:
         search_payload = {"vector": query_embedding, "limit": 1}
-        # 🔥 FIX: Use the exact URL from the C++ test file
-        search_response = requests.post(f"{ENDEE_API_URL}/collections/movies/search", json=search_payload)
+        search_response = requests.post(f"{ENDEE_API_URL}/search", json=search_payload)
         
         if search_response.status_code == 200 and search_response.json().get('results'):
             top_match = search_response.json()['results'][0]
@@ -94,8 +84,7 @@ def vibe_check_search(user_vibe):
         print(f"Gemini API Error: {e}")
 
 if __name__ == "__main__":
-    # Remove the '#' on the next line to run the ingestion process
-    #ingest_data()
+     #ingest_data()
 
     print("\nWelcome to VibeCheck! Search for movies using feelings, aesthetics, or scenarios.")
     while True:

@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     libcurl4-openssl-dev \
     unzip \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build_space
@@ -32,7 +33,7 @@ ARG BUILD_ARCH
 ENV BUILD_ARCH=${BUILD_ARCH}
 ARG DEBUG=false
 ENV DEBUG=${DEBUG}
-RUN chmod +x ./install.sh && \
+RUN dos2unix ./install.sh && chmod +x ./install.sh && \
     if [ "$DEBUG" = "true" ]; then \
         ./install.sh --${BUILD_ARCH} --debug_all --skip-deps; \
     else \
@@ -92,9 +93,7 @@ LABEL org.opencontainers.image.description="Endee Open Source"
 LABEL org.opencontainers.image.url="https://endee.io/"
 LABEL org.opencontainers.image.documentation="https://docs.endee.io/"
 LABEL org.opencontainers.image.vendor="Endee Labs"
-#To be updated
 LABEL org.opencontainers.image.source=""
-
 
 # Set the entrypoint
 ENTRYPOINT ["/usr/local/bin/ndd-server"]
